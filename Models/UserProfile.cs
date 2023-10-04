@@ -21,4 +21,9 @@ public class UserProfile
 
     public IdentityUser IdentityUser { get; set; }
 
+
+    //add project-related composition properties
+    public List<ChoreAssignment> ChoreAssignments { get; set; }
+    public List<ChoreCompletion> ChoreCompletions { get; set; }
+
 }
