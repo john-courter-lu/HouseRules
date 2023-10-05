@@ -27,7 +27,12 @@ return (
         <>
             <NavbarToggler onClick={toggleNavbar} />
             <Collapse isOpen={open} navbar>
-            <Nav navbar></Nav>
+            <Nav navbar>
+            <NavItem>
+                <NavLink href="/userProfile">Profiles</NavLink>
+            </NavItem>
+
+            </Nav>
             </Collapse>
             <Button
             color="primary"
