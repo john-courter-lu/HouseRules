@@ -139,5 +139,32 @@ public class ChoreController : ControllerBase
         }
     }
 
+    // admins only, update a chore
+    // This endpoint should allow updating all of the columns of the Chore table 
+    [HttpPut("{id}")] // /api/chore/{id}
+    [Authorize(Roles = "Admin")]
+    public IActionResult UpdateChore(int id, [FromBody] Chore updatedChore)
+    {
+        Chore chore = _dbContext.Chores.SingleOrDefault(c => c.Id == id);
+        if (chore == null)
+        {
+            return NotFound();
+        }
+        else if (chore.Id != updatedChore.Id)
+        {
+            return BadRequest("updatedChore has the wrong Id");
+        }
+
+        chore.Name = updatedChore.Name;
+        chore.Difficulty = updatedChore.Difficulty;
+        chore.ChoreFrequencyDays = updatedChore.ChoreFrequencyDays;
+        // chore.ChoreAssignments = updatedChore.ChoreAssignments;
+        // chore.ChoreCompletions = updatedChore.ChoreCompletions;
+
+        _dbContext.SaveChanges();
+
+        return NoContent();
+    }
+
 }
 
