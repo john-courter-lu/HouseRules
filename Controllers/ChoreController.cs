@@ -165,6 +165,22 @@ public class ChoreController : ControllerBase
 
         return NoContent();
     }
+    
+    // admins only, delete a chore
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")] 
+    public IActionResult DeleteChore(int id)
+    {
+        Chore choreToDelete = _dbContext.Chores.SingleOrDefault(c => c.Id == id);
 
+        if (choreToDelete == null)
+        {
+            return NotFound();
+        }
+
+        _dbContext.Chores.Remove(choreToDelete);
+        _dbContext.SaveChanges();
+        return NoContent();
+    }
 }
 
