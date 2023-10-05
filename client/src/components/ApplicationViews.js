@@ -3,6 +3,8 @@ import { AuthorizedRoute } from "./auth/AuthorizedRoute";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import { Home } from "./Home.js";
+import { UserProfileList } from "./userProfiles/UserProfileList.js";
+import { UserProfileDetails } from "./userProfiles/UserProfileDetails.js";
 
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
@@ -51,6 +53,26 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
             </AuthorizedRoute>
           }
         />
+
+        <Route path="userProfile">
+          <Route
+            index
+            element={
+              <AuthorizedRoute roles={["Admin"]} loggedInUser={loggedInUser}>
+                <UserProfileList />
+              </AuthorizedRoute>
+            }
+          />
+          <Route
+            path=":userId"
+            element={
+              <AuthorizedRoute roles={["Admin"]} loggedInUser={loggedInUser}>
+                <UserProfileDetails />
+              </AuthorizedRoute>
+            }
+          />
+        </Route>
+
         <Route
           path="login"
           element={<Login setLoggedInUser={setLoggedInUser} />}
