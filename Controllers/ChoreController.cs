@@ -19,7 +19,7 @@ public class ChoreController : ControllerBase
 
     // get all chores
     [HttpGet]  // route /api/chore
-    //[Authorize]
+    [Authorize]
     public IActionResult Get()
     {
         return Ok(_dbContext.Chores.ToList());
@@ -27,7 +27,7 @@ public class ChoreController : ControllerBase
 
     // get chores by id with selective info
     [HttpGet("{id}")] // route /api/chore/{id}
-    //[Authorize] 
+    [Authorize] 
     public IActionResult GetChoreById(int id)
     {
         Chore chore = _dbContext.Chores
@@ -61,7 +61,7 @@ public class ChoreController : ControllerBase
 
     // complete a chore
     [HttpPost("{id}/complete")]
-    //[Authorize]
+    [Authorize]
     public IActionResult CompleteChore(int id, int userId)
     {
         Chore choreToComplete = _dbContext.Chores
