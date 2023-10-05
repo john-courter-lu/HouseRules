@@ -27,7 +27,7 @@ public class ChoreController : ControllerBase
 
     // get chores by id with selective info
     [HttpGet("{id}")] // route /api/chore/{id}
-    //[Authorize]
+    [Authorize]
     public IActionResult GetChoreById(int id)
     {
         Chore chore = _dbContext.Chores
@@ -206,5 +206,27 @@ public class ChoreController : ControllerBase
 
         return NoContent();
     }
+
+    // admins only, assign a chore to a user
+    [HttpPost("{id}/unassign")]
+    [Authorize(Roles = "Admin")]
+    public IActionResult UnssignChore(int id, int userId)
+    {
+        Chore choreToUnassign = _dbContext.Chores.SingleOrDefault(c => c.Id == id);
+        UserProfile userProfile = _dbContext.UserProfiles.SingleOrDefault(up => up.Id == userId);
+        ChoreAssignment choreAssignment = _dbContext.ChoreAssignments.SingleOrDefault(ca => ca.ChoreId == id && ca.UserProfileId == userId);
+
+        if (choreToUnassign == null || userProfile == null || choreAssignment == null)
+        {
+            return NotFound("chore or user or assignment not found");
+        }
+
+        _dbContext.ChoreAssignments.Remove(choreAssignment);
+        _dbContext.SaveChanges();
+
+        return NoContent();
+    }
+
+
 }
 
