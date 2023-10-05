@@ -17,6 +17,7 @@ public class ChoreController : ControllerBase
         _dbContext = context;
     }
 
+    // get all chores
     [HttpGet]  // route /api/chore
     //[Authorize]
     public IActionResult Get()
@@ -24,6 +25,7 @@ public class ChoreController : ControllerBase
         return Ok(_dbContext.Chores.ToList());
     }
 
+    // get chores by id with selective info
     [HttpGet("{id}")] // route /api/chore/{id}
     //[Authorize] 
     public IActionResult GetChoreById(int id)
@@ -55,6 +57,49 @@ public class ChoreController : ControllerBase
         }
 
         return Ok(chore);
+    }
+
+    // complete a chore
+    [HttpPost("{id}/complete")]
+    //[Authorize]
+    public IActionResult CompleteChore(int id, int userId)
+    {
+        Chore choreToComplete = _dbContext.Chores
+        .SingleOrDefault(c => c.Id == id);
+
+        if (choreToComplete == null)
+        {
+            return NotFound();
+        }
+
+        // to improve: algorithm of checking if userId exists
+        UserProfile user = _dbContext.UserProfiles
+        .SingleOrDefault(u => u.Id == userId);
+
+        if (user == null)
+        {
+            return BadRequest("Invalid userId."); //400 
+        }
+
+        // Check if the chore is already completed by the user
+        bool isCompleted = _dbContext.ChoreCompletions
+            .Any(cc => cc.ChoreId == id && cc.UserProfileId == userId && cc.CompletedOn == DateTime.Today);
+
+        if (isCompleted)
+        {
+            return BadRequest("Chore is already completed by the user today."); //400
+        }
+
+        _dbContext.ChoreCompletions.Add(new ChoreCompletion
+        {
+            UserProfileId = userId,
+            ChoreId = id,
+            CompletedOn = DateTime.Today
+        });
+
+        _dbContext.SaveChanges();
+
+        return NoContent();
     }
 }
 
