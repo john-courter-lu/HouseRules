@@ -29,7 +29,10 @@ return (
             <Collapse isOpen={open} navbar>
             <Nav navbar>
             <NavItem>
-                <NavLink href="/userProfile">Profiles</NavLink>
+                <NavLink href="/userProfiles">Profiles</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink href="/chores">Chores</NavLink>
             </NavItem>
 
             </Nav>
