@@ -34,6 +34,7 @@ public class ChoreController : ControllerBase
         .Include(c => c.ChoreAssignments)
             .ThenInclude(ca => ca.UserProfile)
         .Include(c => c.ChoreCompletions)
+            .ThenInclude(cc => cc.UserProfile)
 
         .SingleOrDefault(c => c.Id == id);
 
@@ -44,8 +45,10 @@ public class ChoreController : ControllerBase
 
         // Remove UserProfile information from ChoreCompletions
         // based on the requirement
-        // For front-end, decided to keep the information
-        
+
+        // but for front-end, decided to keep the information
+        // oddly, I need to use .ThenInclude() which was not the case when creating the endpoint
+
         // foreach (var completion in chore.ChoreCompletions)
         // {
         //     completion.UserProfile = null;
