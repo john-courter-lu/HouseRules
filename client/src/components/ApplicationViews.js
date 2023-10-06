@@ -12,6 +12,7 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
   return (
     <Routes>
       <Route path="/">
+
         <Route
           index
           element={
@@ -20,6 +21,7 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
             </AuthorizedRoute>
           }
         />
+
         <Route
           path="home"
           element={
@@ -28,12 +30,13 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
             </AuthorizedRoute>
           }
         />
+
         <Route path="chores">
           <Route
             index
             element={
               <AuthorizedRoute loggedInUser={loggedInUser}>
-                   <ChoresList />
+                <ChoresList loggedInUser={loggedInUser} />
               </AuthorizedRoute>
             }
           />
@@ -45,7 +48,9 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
               </AuthorizedRoute>
             }
           />
+
         </Route>
+
         <Route
           path="pathName3_AdminOnly"
           element={
@@ -64,6 +69,7 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
               </AuthorizedRoute>
             }
           />
+
           <Route
             path=":userId"
             element={
@@ -72,6 +78,7 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
               </AuthorizedRoute>
             }
           />
+
         </Route>
 
         <Route
