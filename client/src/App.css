@@ -6,7 +6,7 @@
   padding: 1rem 0;
   background-color: cornsilk;
 }
-.sub-menu a {
+.sub-menu a, button {
   margin-left: 1rem;
   align-self: center;
 }
