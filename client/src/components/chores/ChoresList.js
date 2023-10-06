@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Table } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { deleteChore, getChores } from "../../managers/choreManger.js";
+import { deleteChore, getChores } from "../../managers/choreManager.js";
 
 export const ChoresList = ({ loggedInUser }) => {
     const [chores, setChores] = useState([]);
