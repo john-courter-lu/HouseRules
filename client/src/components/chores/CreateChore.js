@@ -24,14 +24,14 @@ export const CreateChore = () => {
     };
 
     return (
-        <>
-            <h2>Create Chore</h2>
+        <div className="container">
+            <h2 className="sub-menu">Create Chore</h2>
             <Form>
                 <FormGroup>
                     <Label>Name</Label>
                     <Input
                         type="text"
-                        placeholder="Name of Chore..."
+                        placeholder="Name of Chore"
                         onChange={(e) => {
                             setName(e.target.value);
                         }}
@@ -75,6 +75,6 @@ export const CreateChore = () => {
                     Submit
                 </Button>
             </Form>
-        </>
+        </div>
     )
 }

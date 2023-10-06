@@ -7,6 +7,7 @@ import { UserProfileList } from "./userProfiles/UserProfileList.js";
 import { UserProfileDetails } from "./userProfiles/UserProfileDetails.js";
 import { ChoresList } from "./chores/ChoresList.js";
 import { ChoreDetails } from "./chores/ChoreDetails.js";
+import { CreateChore } from "./chores/CreateChore.js";
 
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
@@ -53,7 +54,7 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
             path="create" // Admin-only
             element={
               <AuthorizedRoute roles={["Admin"]} loggedInUser={loggedInUser}>
-                <Home />
+                <CreateChore />
               </AuthorizedRoute>
             }
           />
