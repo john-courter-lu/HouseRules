@@ -6,6 +6,7 @@ import { Home } from "./Home.js";
 import { UserProfileList } from "./userProfiles/UserProfileList.js";
 import { UserProfileDetails } from "./userProfiles/UserProfileDetails.js";
 import { ChoresList } from "./chores/ChoresList.js";
+import { ChoreDetails } from "./chores/ChoreDetails.js";
 
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
@@ -41,10 +42,10 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
             }
           />
           <Route
-            path="pathName2_subPath"
+            path=":choreId" // Admin-only
             element={
-              <AuthorizedRoute loggedInUser={loggedInUser}>
-                <p>PathName2_subPath</p>
+              <AuthorizedRoute roles={["Admin"]} loggedInUser={loggedInUser}>
+                <ChoreDetails />
               </AuthorizedRoute>
             }
           />
