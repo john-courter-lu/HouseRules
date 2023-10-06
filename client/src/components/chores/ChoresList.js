@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { Button, Table } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { deleteChore, getChores } from "../../managers/choreManager.js";
+import { completeChore, deleteChore, getChores } from "../../managers/choreManager.js";
 
 export const ChoresList = ({ loggedInUser }) => {
     const [chores, setChores] = useState([]);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        getChores().then(setChores);
+    }, [])
 
     const handleDelete = (id) => {
         deleteChore(id).then(() => {
@@ -14,11 +18,11 @@ export const ChoresList = ({ loggedInUser }) => {
         })
     }
 
-    useEffect(() => {
-        getChores().then(setChores);
-    }, [])
-
-
+    const handleComplete = (id, userId) => {
+        completeChore(id, userId).then(() => {
+            navigate("/chores");
+        })
+    }
 
     return (
         <div className="container">
@@ -49,12 +53,24 @@ export const ChoresList = ({ loggedInUser }) => {
 
                             <td>{c.difficulty}</td>
                             <td>{c.choreFrequencyDays} Day(s)</td>
+                            <td>
+                                <Button
+                                    color="success"
+                                    onClick={() => {
+                                        handleComplete(c.id, loggedInUser.id);
+                                    }}
+                                >
+                                    Complete
+                                </Button>
+                            </td>
 
                             {loggedInUser?.roles.includes("Admin") && (
                                 <>
                                     <td>
                                         <Link to={`${c.id}`}>
-                                            <Button color="info">Details</Button>
+                                            <Button color="info">
+                                                Details
+                                            </Button>
                                         </Link>
                                     </td>
                                     <td>
