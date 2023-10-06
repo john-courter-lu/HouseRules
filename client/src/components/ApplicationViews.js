@@ -49,6 +49,14 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
               </AuthorizedRoute>
             }
           />
+          <Route
+            path="create" // Admin-only
+            element={
+              <AuthorizedRoute roles={["Admin"]} loggedInUser={loggedInUser}>
+                <Home />
+              </AuthorizedRoute>
+            }
+          />
 
         </Route>
 

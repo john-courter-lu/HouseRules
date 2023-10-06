@@ -22,7 +22,12 @@ export const ChoresList = ({ loggedInUser }) => {
 
     return (
         <div className="container">
-            <h4 className="sub-menu">Chores</h4>
+            <div className="sub-menu">
+                <h4 >Chores</h4>
+                {loggedInUser.roles.includes("Admin") && (
+                    <Link to="/chores/create"> <Button>New Chore</Button></Link>
+                )}
+            </div>
             <Table>
                 <thead>
                     <tr>
