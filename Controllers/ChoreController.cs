@@ -44,10 +44,12 @@ public class ChoreController : ControllerBase
 
         // Remove UserProfile information from ChoreCompletions
         // based on the requirement
-        foreach (var completion in chore.ChoreCompletions)
-        {
-            completion.UserProfile = null;
-        }
+        // For front-end, decided to keep the information
+        
+        // foreach (var completion in chore.ChoreCompletions)
+        // {
+        //     completion.UserProfile = null;
+        // }
 
         // Remove ChoreCompletions information from its current assignees' UserProfile 
         // to avoid unnecessarily long JSON returns; and unnecessary information
