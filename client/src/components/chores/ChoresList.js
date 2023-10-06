@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Table } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { getChores } from "../../managers/choreManger.js";
+import { deleteChore, getChores } from "../../managers/choreManager.js";
 
 export const ChoresList = ({ loggedInUser }) => {
     const [chores, setChores] = useState([]);
@@ -9,8 +9,9 @@ export const ChoresList = ({ loggedInUser }) => {
     const navigate = useNavigate();
 
     const handleDelete = (id) => {
-
-
+        deleteChore(id).then(() => {
+            navigate("/chores");
+        })
     }
 
     useEffect(() => {
@@ -46,6 +47,11 @@ export const ChoresList = ({ loggedInUser }) => {
 
                             {loggedInUser?.roles.includes("Admin") && (
                                 <>
+                                    <td>
+                                        <Link to={`${c.id}`}>
+                                            <Button color="info">Details</Button>
+                                        </Link>
+                                    </td>
                                     <td>
                                         <Button
                                             color="danger"
