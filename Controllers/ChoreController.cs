@@ -201,15 +201,25 @@ public class ChoreController : ControllerBase
             return NotFound("Chore or User doesn't exist.");
         }
 
-        _dbContext.ChoreAssignments.Add(new ChoreAssignment
+        ChoreAssignment choreAssignment = _dbContext.ChoreAssignments.FirstOrDefault(ca => ca.ChoreId == id && ca.UserProfileId == userId);
+
+        if (choreAssignment != null) // error handling: no mutiple assignments;
         {
-            UserProfileId = userId,
-            ChoreId = id
-        });
+            return BadRequest("Assignment Aready Exists!");
+        }
+        else
+        {
+            _dbContext.ChoreAssignments.Add(new ChoreAssignment
+            {
+                UserProfileId = userId,
+                ChoreId = id
+            });
 
-        _dbContext.SaveChanges();
+            _dbContext.SaveChanges();
 
-        return NoContent();
+            return NoContent();
+        }
+
     }
 
     // admins only, assign a chore to a user
@@ -219,7 +229,9 @@ public class ChoreController : ControllerBase
     {
         Chore choreToUnassign = _dbContext.Chores.SingleOrDefault(c => c.Id == id);
         UserProfile userProfile = _dbContext.UserProfiles.SingleOrDefault(up => up.Id == userId);
-        ChoreAssignment choreAssignment = _dbContext.ChoreAssignments.SingleOrDefault(ca => ca.ChoreId == id && ca.UserProfileId == userId);
+        ChoreAssignment choreAssignment = _dbContext.ChoreAssignments.FirstOrDefault(ca => ca.ChoreId == id && ca.UserProfileId == userId);
+        // for front-end, FirstOrDefault is better than SingleOrDefault 
+        // In case, assigned twice; Alternatively, add error handling in AssignChore
 
         if (choreToUnassign == null || userProfile == null || choreAssignment == null)
         {
