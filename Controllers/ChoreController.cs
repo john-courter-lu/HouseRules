@@ -34,6 +34,7 @@ public class ChoreController : ControllerBase
         .Include(c => c.ChoreAssignments)
             .ThenInclude(ca => ca.UserProfile)
         .Include(c => c.ChoreCompletions)
+            .ThenInclude(cc => cc.UserProfile)
 
         .SingleOrDefault(c => c.Id == id);
 
@@ -44,10 +45,14 @@ public class ChoreController : ControllerBase
 
         // Remove UserProfile information from ChoreCompletions
         // based on the requirement
-        foreach (var completion in chore.ChoreCompletions)
-        {
-            completion.UserProfile = null;
-        }
+
+        // but for front-end, decided to keep the information
+        // oddly, I need to use .ThenInclude() which was not the case when creating the endpoint
+
+        // foreach (var completion in chore.ChoreCompletions)
+        // {
+        //     completion.UserProfile = null;
+        // }
 
         // Remove ChoreCompletions information from its current assignees' UserProfile 
         // to avoid unnecessarily long JSON returns; and unnecessary information
@@ -196,15 +201,25 @@ public class ChoreController : ControllerBase
             return NotFound("Chore or User doesn't exist.");
         }
 
-        _dbContext.ChoreAssignments.Add(new ChoreAssignment
+        ChoreAssignment choreAssignment = _dbContext.ChoreAssignments.FirstOrDefault(ca => ca.ChoreId == id && ca.UserProfileId == userId);
+
+        if (choreAssignment != null) // error handling: no mutiple assignments;
         {
-            UserProfileId = userId,
-            ChoreId = id
-        });
+            return BadRequest("Assignment Aready Exists!");
+        }
+        else
+        {
+            _dbContext.ChoreAssignments.Add(new ChoreAssignment
+            {
+                UserProfileId = userId,
+                ChoreId = id
+            });
 
-        _dbContext.SaveChanges();
+            _dbContext.SaveChanges();
 
-        return NoContent();
+            return NoContent();
+        }
+
     }
 
     // admins only, assign a chore to a user
@@ -214,7 +229,9 @@ public class ChoreController : ControllerBase
     {
         Chore choreToUnassign = _dbContext.Chores.SingleOrDefault(c => c.Id == id);
         UserProfile userProfile = _dbContext.UserProfiles.SingleOrDefault(up => up.Id == userId);
-        ChoreAssignment choreAssignment = _dbContext.ChoreAssignments.SingleOrDefault(ca => ca.ChoreId == id && ca.UserProfileId == userId);
+        ChoreAssignment choreAssignment = _dbContext.ChoreAssignments.FirstOrDefault(ca => ca.ChoreId == id && ca.UserProfileId == userId);
+        // for front-end, FirstOrDefault is better than SingleOrDefault 
+        // In case, assigned twice; Alternatively, add error handling in AssignChore
 
         if (choreToUnassign == null || userProfile == null || choreAssignment == null)
         {

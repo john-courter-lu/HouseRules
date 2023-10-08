@@ -1,18 +1,43 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { assignChore, getChoreById, unassignChore, updateChore } from "../../managers/choreManager.js";
-import { Table } from "reactstrap";
+import { Input, Label, Table } from "reactstrap";
+import { getUserProfiles } from "../../managers/userProfileManager.js";
 
 export const ChoreDetails = () => {
     const [chore, setChore] = useState(null);
+    const [users, setUsers] = useState([]);
 
     const { choreId } = useParams();
 
 
     useEffect(() => {
         getChoreById(choreId).then(setChore);
+        getUserProfiles().then(setUsers);
 
     }, [])
+
+    const handleAssignOrUnassign = (event, user) => {
+        const { checked } = event.target;
+
+        const promise = checked
+            ? assignChore(chore.id, user.id)
+            : unassignChore(chore.id, user.id)
+            
+        promise.then(() => {
+            getChoreById(chore.id).then(setChore);
+        })
+    }
+
+    const checkedStatus = (user) => {
+        for (const assignment of chore.choreAssignments) {
+            if (assignment.userProfileId === user.id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     if (!chore) {
         return null;
@@ -45,23 +70,25 @@ export const ChoreDetails = () => {
             </Table>
 
             <h5 className="sub-menu">Current Assignee</h5>
-            {chore.choreAssignments.length !== 0 ?
-                (<Table>
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {chore.choreAssignments.map((ca) => (
-                            <tr key={`choreAssignments--${ca.id}`}>
-                                <td>{ca.userProfile.firstName}</td>
-                                <td>{ca.userProfile.lastName}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>) : (<p>No Current Assignee</p>)}
+            <div>
+                {chore.choreAssignments.length === 0 ?
+                    (<p>No Current Assignee, Assign One Please : </p>) : (<p>You Can Change Current Assignee Down Below :</p>)}
+                {
+                    users.map((up) => (
+                        <div key={`user--${up.id}`}>
+                            <Input
+                                type="checkbox"
+                                style={{ margin: "0.2rem 0.75rem" }}
+                                checked={checkedStatus(up)}
+                                onChange={(e) => {
+                                    handleAssignOrUnassign(e, up);
+                                }}
+                            />
+                            <Label>{up.firstName} {up.lastName}</Label>
+                        </div>
+                    ))
+                }
+            </div>
 
             <h5 className="sub-menu">Most Recent Completion</h5>
             {chore.choreCompletions.length !== 0 ?
@@ -75,7 +102,7 @@ export const ChoreDetails = () => {
                     <tbody>
                         {chore.choreCompletions.map((cc) => (
                             <tr key={`choreCompletion--${cc.id}`}>
-                                <td>{new Date(cc.completedOn).toDateString()}</td>
+                                <td>{new Date(cc.completedOn).toLocaleDateString()}</td>
                                 <td>
                                     {cc?.userProfile?.firstName || cc?.userProfile?.lastName || 'N/A'}
                                     {/* if cc.userProfile.firstName is falsy (null or undefined), it checks cc.userProfile.lastName. If both are falsy, it displays "N/A." If either cc.userProfile.firstName or cc.userProfile.lastName is truthy (not null or undefined), it displays the respective value. */}
