@@ -19,7 +19,7 @@ export default function NavBar({ loggedInUser, setLoggedInUser }) {
 
     return (
         <div>
-            <Navbar color="light" light fixed="true" expand="lg">
+            <Navbar color="light" light fixed="true" expand="sm">
                 <NavbarBrand className="mr-auto" tag={RRNavLink} to="/">
                     🧹🧼House Rules
                 </NavbarBrand>
@@ -28,7 +28,7 @@ export default function NavBar({ loggedInUser, setLoggedInUser }) {
                         <NavbarToggler onClick={toggleNavbar} />
                         <Collapse isOpen={open} navbar>
                             <Nav navbar>
-                                
+
                                 {loggedInUser.roles.includes("Admin") && (
                                     <NavItem onClick={() => setOpen(false)}>
                                         <NavLink tag={RRNavLink} to="/userProfiles">
