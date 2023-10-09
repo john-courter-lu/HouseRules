@@ -7,7 +7,8 @@ export const CreateChore = () => {
     const [name, setName] = useState("");
     const [difficulty, setDifficulty] = useState(null);
     const [choreFrequencyDays, setFrequencyDays] = useState(null);
-  
+    const [errors, setErrors] = useState("");
+
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
@@ -18,8 +19,12 @@ export const CreateChore = () => {
             choreFrequencyDays
         };
 
-        createChore(newChore).then(() => {
-            navigate("/chores");
+        createChore(newChore).then((res) => {
+            if (res.errors) {
+                setErrors(res.errors);
+            } else {
+                navigate("/chores");
+            }
         });
     };
 
@@ -75,6 +80,16 @@ export const CreateChore = () => {
                     Submit
                 </Button>
             </Form>
+            <div style={{ color: "red", background: "lightgray", padding: "1rem ", margin: "2rem 0" }}>
+                {Object.keys(errors).map((key) => (
+                    <> <p>Error Informaton:</p>
+                        <p key={key}>
+                            {key}: {errors[key].join(",")}
+                        </p>
+                    </>
+                ))}
+            </div>
         </div>
+
     )
 }
